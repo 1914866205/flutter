@@ -10,6 +10,7 @@ class Share {
   String summary;
   String auditStatus;
   String reason;
+  String downloadUrl;
   int price;
   int buyCount;
   bool showFlag;
@@ -22,6 +23,7 @@ class Share {
         this.updateTime,
         this.isOriginal,
         this.author,
+        this.downloadUrl,
         this.cover,
         this.summary,
         this.auditStatus,
@@ -39,6 +41,7 @@ class Share {
     isOriginal = json['isOriginal'];
     author = json['author'];
     cover = json['cover'];
+    downloadUrl = json['downloadUrl'];
     summary = json['summary'];
     auditStatus = json['auditStatus'];
     reason = json['reason'];

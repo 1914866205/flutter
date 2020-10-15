@@ -18,6 +18,7 @@ class ListItem extends StatefulWidget {
 
 class _ListItemState extends State<ListItem> {
   final List<Share> shareLists;
+
   _ListItemState(this.shareLists);
 
   @override
@@ -82,9 +83,9 @@ class _ListItemState extends State<ListItem> {
                         Text(shareLists[i].price.toString() + "积分"),
                         Text(Constant.user != null
                             ? Constant.user.wxNickname != shareLists[i].author
-                                ? "兑换"
-                                : "下载"
-                            : "兑换"),
+                            ? "兑换"
+                            : "下载"
+                            : "兑换") ,
                       ],
                     ),
                   )
@@ -97,4 +98,6 @@ class _ListItemState extends State<ListItem> {
     }
     return lists;
   }
+
+
 }

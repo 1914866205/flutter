@@ -4,6 +4,7 @@ import 'package:knowledge_sharing/contribution/page/contribution_page.dart';
 import 'package:knowledge_sharing/home/page/home_page.dart';
 import 'package:knowledge_sharing/my/page/my_page.dart';
 
+  /// 最下面的三个导航栏     首页，投稿，我的
 class InitialPage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -46,7 +47,7 @@ class _HomePageState extends State<InitialPage> {
       ),
     );
   }
-
+/// 被选中后，图标变红
    Widget _getIcon(String url) {
     return Container(
       height: 24,
@@ -59,6 +60,7 @@ class _HomePageState extends State<InitialPage> {
     );
   }
 
+/// 被选中后，标签变大
    Widget _getTitle(String title) {
     return Container(
       child: Text(
@@ -68,6 +70,7 @@ class _HomePageState extends State<InitialPage> {
     );
   }
 
+/// 被选中后，索引改变
   void _changeIndex(value) {
     setState(() {
       currentIndex = value;

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:knowledge_sharing/common/common_style.dart';
 import 'package:knowledge_sharing/common/constant.dart';
-
+/// 投稿页
 class ContributionPage extends StatefulWidget {
   @override
   _ContributionPageState createState() => _ContributionPageState();

@@ -1,13 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:knowledge_sharing/common/common_style.dart';
 import 'package:knowledge_sharing/common/constant.dart';
 import 'package:knowledge_sharing/home/model/Share.dart';
+import 'package:knowledge_sharing/home/page/load_page.dart';
 import 'package:knowledge_sharing/home/widget/list_item.dart';
 import 'package:knowledge_sharing/http/api.dart';
 import 'package:knowledge_sharing/http/http_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'exchange_page.dart';
+/// 首页
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -34,6 +37,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _getData();
 
     ///初始化选项卡控制器，选项卡个数为2，默认显示第一个选项卡内容
+    ///  创建两个 Tab 选项卡
     _tabController = TabController(length: 2, initialIndex: 0, vsync: this);
     super.initState();
   }
@@ -62,6 +66,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
       ///定义tab选项卡
       child: TabBar(
+        /// 指向 _tabController选项卡
         controller: _tabController,
 
         ///自定义指示器
@@ -85,11 +90,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ///文本的默认样式
         labelColor: Constant.lightBlack,
         tabs: <Widget>[
+          ///  “发现” 选项卡
           Tab(
             ///手势组件
             child: InkWell(
               onTap: () {
                 _searchFocus.unfocus();
+                //// 选项卡集合
                 _tabController.index = 0;
               },
               child: Container(
@@ -103,11 +110,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ),
           ),
+          //// “使用说明” 选项卡
           Tab(
             child: InkWell(
               onTap: () {
                 _searchFocus.unfocus();
-
                 ///点击事件，指定选项卡内容改变为第二个选项卡内容
                 _tabController.index = 1;
               },
@@ -132,8 +139,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ///选项卡控制器
             controller: _tabController,
             children: <Widget>[
-              ///分割出去的组件
+              ///分割出去的组件   选项卡 index=0的组件
               _buildFindWidgt(),
+              /// 未分割出去的组件  选项卡 index=1的组件
               Container(
                 ///内边距
                 padding: EdgeInsets.all(40.w),
@@ -155,6 +163,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     print("获取到的数据是：" + shareLists.length.toString());
     return Column(
       children: <Widget>[
+        /// 文本域
         Container(
           height: 80.w,
           color: Color(0xFFfefbe8),
@@ -171,6 +180,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           padding: EdgeInsets.fromLTRB(40.w, 10.w, 40.w, 10.w),
 
           ///在Column中若使用Container去包裹一个TextField，必须要给Container一个宽高，否则会报
+          /// 搜索框
           child: TextField(
             focusNode: _searchFocus,
             controller: _keywords,
@@ -221,7 +231,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ///设置指定上部外边距
               margin: EdgeInsets.only(top: 20.w),
 
-              ///引入自定义组件,传入对应的值
+              ///引入自定义组件,传入对应的值. Shares列表
               child: ListView(
                 children: _buildListWidget(),
               ),
@@ -232,7 +242,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  ///构建列表
+  ///        Shares列表
   List<Widget> _buildListWidget() {
     List<Widget> lists = List();
     for (int i = 0; i < shareLists.length; i++) {
@@ -282,17 +292,32 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                   Container(
-                    child: Column(
-                      children: <Widget>[
-                        Text(shareLists[i].price.toString() + "积分"),
-                        Text(Constant.user != null
-                            ? Constant.user.wxNickname != shareLists[i].author
-                                ? "兑换"
-                                : "下载"
-                            : "兑换"),
-                      ],
-                    ),
-                  )
+                      child: Column(
+                        children: <Widget>[
+                          Text(shareLists[i].price.toString() + "积分"),
+                          Container(
+                            height: 30,
+                            // width: 200,
+                            color: Colors.red,
+                            child: FlatButton(
+                                color: Constant.mColor,
+                                padding: EdgeInsets.all(0),
+                                onPressed: () {
+                                  print("进入点击方法");
+                                  // 如果显示为下载，则进入下载页面，否则兑换
+                                  if(_showFlag(shareLists[i])){
+                                  _load(shareLists[i]);
+                                  }else(
+                                  _exchange(shareLists[i])
+                                  );
+                                },
+                                  /**
+                                   * 如果downloadUrl为null，则显示兑换，有值，则下载
+                                   * 如果是自己的作品，直接显示为兑换
+                                   */
+                                child: Text(_showFlag(shareLists[i])?"下载":"兑换"))),
+                        ],
+                      )),
                 ],
               ),
             ),
@@ -303,19 +328,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return lists;
   }
 
-  ///请求接口，获取数据
+  ///请求接口，获取数据————————获取所有的share,保存在shareLists
   Future<void> _getData() async {
-    ///第一个参数是你的接口名
-    print("111");
+
     HttpUtil.getRequest( Api.getShareInfo, {"pageSize": pageSize, "pageIndex": pageIndex},(code, msg, data) {
-      print("2");
       print("sharelist" + data.toString());
       if (code == 0) {
-        print("3");
         for (int i = 0; i < data.length; i++) {
           Share share = Share.fromJson(data[i]);
           shareLists.add(share);
         }
+        print(shareLists.toString());
         setState(() {});
       } else {
         print("请求异常>>>>>" + msg);
@@ -325,7 +348,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  ///请求接口，获取数据
+  ///请求接口，获取数据       搜索shares
   Future<void> _search() async {
     shareLists = List<Share>();
 
@@ -341,6 +364,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           shareLists.add(share);
         }
         print("分享信息的列表条数是: " + shareLists.length.toString());
+        /// 重绘页面
         setState(() {});
       } else {
         print("请求异常>>>>>" + msg);
@@ -348,5 +372,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }, (error) {
       print("请求出错" + error.toString());
     });
+  }
+  bool _showFlag(Share share){
+    return (Constant.user != null)? ((Constant.user.wxNickname == share.author) ? true  : (share.downloadUrl!=null)?true:false ): false;
+  }
+
+  void _load(Share share) {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return LoadPage(share);
+      },
+    ));
+  }
+
+  _exchange(Share share) {
+    //进入兑换页面
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return Exchange(share);
+      },
+    ));
   }
 }

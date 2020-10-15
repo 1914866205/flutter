@@ -10,6 +10,7 @@ import 'package:knowledge_sharing/my/page/my_contribution.dart';
 import 'package:knowledge_sharing/my/page/my_exchange.dart';
 import 'package:knowledge_sharing/my/page/score_detail.dart';
 
+/// “我的” 页面
 class MyPage extends StatefulWidget {
   @override
   _MyPageState createState() => _MyPageState();
@@ -24,6 +25,7 @@ class _MyPageState extends State<MyPage> {
     super.initState();
   }
 
+  /// 顶部标题
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +41,7 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
+  /// 页内主体   头像部分
   Widget _buildBodyWidget() {
     return Container(
       padding: EdgeInsets.only(top: 20.w, bottom: 20.w),
@@ -69,7 +72,10 @@ class _MyPageState extends State<MyPage> {
           SizedBox(
             height: 10.w,
           ),
-          Text("积分: " + "${Constant.user == null ? "0" : Constant.user.bonus.toString()}", style: CommonStyle.content()),
+          Text(
+              "积分: " +
+                  "${Constant.user == null ? "0" : Constant.user.bonus.toString()}",
+              style: CommonStyle.content()),
           SizedBox(
             height: 20.w,
           ),
@@ -148,9 +154,11 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
+// 根据userId获取我的shares
   void getSharesByUserId() {
-    print("用户id是: " + Constant.user.id.toString());
-    HttpUtil.getRequest(Api.getExchangeShareInfo + "/" + Constant.user.id.toString(), null,
+    print("用户id是==============: " + Constant.user.id.toString());
+    HttpUtil.getRequest(
+        Api.getExchangeShareInfo + "/" + Constant.user.id.toString(), null,
         (code, msg, data) {
       for (int i = 0; i < data.length; i++) {
         Share share = Share.fromJson(data[i]);

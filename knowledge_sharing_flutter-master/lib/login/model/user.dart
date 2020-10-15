@@ -7,20 +7,16 @@ class User {
   String createTime;
   String updateTime;
   int bonus;
-  String account;
-  String password;
 
   User(
       {this.id,
-      this.wxId,
-      this.wxNickname,
-      this.roles,
-      this.avatarUrl,
-      this.createTime,
-      this.updateTime,
-      this.bonus,
-      this.account,
-      this.password});
+        this.wxId,
+        this.wxNickname,
+        this.roles,
+        this.avatarUrl,
+        this.createTime,
+        this.updateTime,
+        this.bonus});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -31,8 +27,6 @@ class User {
     createTime = json['createTime'];
     updateTime = json['updateTime'];
     bonus = json['bonus'];
-    account = json['account'];
-    password = json['password'];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,8 +39,6 @@ class User {
     data['createTime'] = this.createTime;
     data['updateTime'] = this.updateTime;
     data['bonus'] = this.bonus;
-    data['account'] = this.account;
-    data['password'] = this.password;
     return data;
   }
 }

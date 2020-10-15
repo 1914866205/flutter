@@ -5,7 +5,7 @@ import 'package:knowledge_sharing/common/constant.dart';
 import 'package:knowledge_sharing/http/api.dart';
 import 'package:knowledge_sharing/http/http_util.dart';
 import 'package:knowledge_sharing/my/model/bonus_log.dart';
-
+/// 积分明细
 class ScoreDetail extends StatefulWidget {
   @override
   _ScoreDetailState createState() => _ScoreDetailState();

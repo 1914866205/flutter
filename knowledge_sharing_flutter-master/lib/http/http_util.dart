@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:knowledge_sharing/common/constant.dart';
 
 class HttpUtil {
   //默认分页页数
@@ -18,6 +19,9 @@ class HttpUtil {
     Dio dio = Dio();
     ///如果需要请求头，在options中写入请求头
     Options options = Options();
+    /// 设置请求头
+    Map<String, dynamic> headers={"X-Token":Constant.token.token};
+    options.headers=headers;
     try {
       ///get请求
       response = await dio.get(url, queryParameters: params, options: options);

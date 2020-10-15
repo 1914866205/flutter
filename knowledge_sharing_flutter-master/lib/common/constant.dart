@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:knowledge_sharing/login/model/token.dart';
 import 'package:knowledge_sharing/login/model/user.dart';
 import 'package:knowledge_sharing/util/sp_util.dart';
 
@@ -39,4 +40,7 @@ class Constant {
 
   ///定义全局变量user
   static User user = new User();
+
+  ///定义token
+  static Token token =new Token();
 }

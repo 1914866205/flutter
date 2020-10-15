@@ -7,7 +7,7 @@ import 'package:knowledge_sharing/home/widget/list_item.dart';
 import 'package:knowledge_sharing/http/api.dart';
 import 'package:knowledge_sharing/http/http_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+///  我的投稿
 class MyContribution extends StatefulWidget {
   @override
   _MyContributionState createState() => _MyContributionState();
@@ -26,6 +26,7 @@ class _MyContributionState extends State<MyContribution> {
 
   @override
   Widget build(BuildContext context) {
+    /// 外置页面 抽屉
     return Scaffold(
       appBar: AppBar(
         title: Text("我的投稿", style: CommonStyle.title()),

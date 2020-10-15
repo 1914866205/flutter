@@ -7,7 +7,7 @@ import 'package:knowledge_sharing/home/widget/list_item.dart';
 import 'package:knowledge_sharing/http/api.dart';
 import 'package:knowledge_sharing/http/http_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+// 我的兑换
 class MyExchange extends StatefulWidget {
   @override
   _MyExchangeStaet createState() => _MyExchangeStaet();
@@ -39,27 +39,34 @@ class _MyExchangeStaet extends State<MyExchange> {
     );
   }
 
-  void getSharesByUserId() {
-    ///get请求，路径参数为登录者id
-    // HttpUtil.getRequest(Api.getExchangeShareInfo + "/" + Constant.user.id.toString(), null,
-    //     (code, msg, data) {
-    //   for (int i = 0; i < data.length; i++) {
-    //     Share share = Share.fromJson(data[i]);
-    //     exchangeList.add(share);
-    //     setState(() {});
-    //     print("share的信息是>>>>" + exchangeList[0].cover);
-    //   }
-    // }, (error) => null);
+  Future<void> getSharesByUserId() async {
+    HttpUtil.getRequest( Api.getMyShareInfo, {"userId":Constant.user.id},(code, msg, data) {
+      print("sharelist" + data.toString());
+      if (code == 200) {
+        /**
+         * I/flutter (21152): null
+            E/flutter (21152): [ERROR:flutter/lib/ui/ui_dart_state.cc(157)] Unhandled Exception: NoSuchMethodError: The method '[]' was called on null.
+            E/flutter (21152): Receiver: null
+            E/flutter (21152): Tried calling: []("id")
+            E/flutter (21152): #0      Object.noSuchMethod (dart:core-patch/object_patch.dart:53:5)
 
-    HttpUtil.getRequest( Api.getShareInfo, {"pageSize": pageSize, "pageIndex": pageIndex},(code, msg, data) {
-      print("2");
-      print("sharelist" + data);
-      if (code == 0) {
-        print("3");
-        for (int i = 0; i < data.length; i++) {
+         */
+        // for (int i = 0; i < data.length-1; i++) {
+        //   print("******************************************************************************");
+        //   print(data[i].toString());
+        //
+        //   Share share = Share.fromJson(data[i]);
+        //   exchangeList.add(share);
+        //   print("******************************************************************************");
+        // }
+        int i=0;
+        while(data[i]!=null){
           Share share = Share.fromJson(data[i]);
           exchangeList.add(share);
+          i++;
         }
+
+
         setState(() {});
       } else {
         print("请求异常>>>>>" + msg);
