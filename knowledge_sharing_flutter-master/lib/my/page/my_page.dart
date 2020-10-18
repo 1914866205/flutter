@@ -6,6 +6,7 @@ import 'package:knowledge_sharing/common/constant.dart';
 import 'package:knowledge_sharing/home/model/Share.dart';
 import 'package:knowledge_sharing/http/api.dart';
 import 'package:knowledge_sharing/http/http_util.dart';
+import 'package:knowledge_sharing/login/model/toast.dart';
 import 'package:knowledge_sharing/my/page/my_contribution.dart';
 import 'package:knowledge_sharing/my/page/my_exchange.dart';
 import 'package:knowledge_sharing/my/page/score_detail.dart';
@@ -84,7 +85,9 @@ class _MyPageState extends State<MyPage> {
             height: 50.w,
             child: RaisedButton(
               padding: EdgeInsets.all(0),
-              onPressed: () {},
+              onPressed: () {
+                _sign();
+              },
               color: Colors.green,
               child: Text(
                 "签到",
@@ -167,5 +170,43 @@ class _MyPageState extends State<MyPage> {
         print("share的信息是>>>>" + shares[0].cover);
       }
     }, (error) => null);
+  }
+
+  void _sign() {
+    print("进入签到方法");
+    /**前端
+     * 签到逻辑
+     * 1.获取最晚的一次 积分增加的原因是 “签到” 的时间
+     * 2.后端判断
+     * 3.弹出消息 重复签到 / 积分 +5
+     * */
+
+    /**后端
+     * 签到逻辑
+     * 1.内容中心收到签到请求 参数 userId
+     * 2.内容中心调用用户中心（积分记录在用户中心）
+     * 3.用户中心根据userId按时间降序排序查询该用户的内容为签到的积分记录
+     * 4.取出积分记录，获取当前时间毫秒值 - 该积分记录创建时间的毫秒值
+     * 5.如果>24.60.60.1000 则为新的一天 创建新的用积分记录，并修改该用户的积分
+     * 6.否则，返回 重复签到
+     * 7.内容中心根据用户中心的返回结果，返回给前端
+     * 8.前端判断，显示不同的内容
+     */
+    HttpUtil.getRequest(
+        Api.sign,
+        {"userId": Constant.user.id},
+        (code, msg, data) => {
+              if (code == 200)
+                {
+                  //签到成功，前端用户积分修改
+                  Constant.user.bonus = Constant.user.bonus+5,
+                  print(Constant.user.bonus.toString()),
+                  setState(() {}),
+                  Toast.toast(context, msg: "签到成功 ，积分 +5 ！")
+                }
+              else
+                {Toast.toast(context, msg: "重复签到，距离下次签到还有" + msg + "秒")}
+            },
+        (error) => null);
   }
 }

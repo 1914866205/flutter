@@ -21,4 +21,10 @@ class Api {
   static String bonusDetail = userCenter + 'user/bonus/my';
   ///兑换share
   static String exchangeShare=baseUrl+'/share/exchange';
+  /// 签到
+  static String sign=baseUrl+'/user/sign';
+  ///积分日志
+  static String bonusLog=baseUrl+'/user/bonusLog';
+  /// 投稿
+  static String contribute=baseUrl+'/share/contribute';
 }

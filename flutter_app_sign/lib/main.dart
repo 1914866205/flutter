@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'firstweek/Day01.dart';
+import 'firstweek/Day02.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity
       ),
-      home:Day01(),
+      // home:Day01(),
+      home:Day02(),
     );
   }
 

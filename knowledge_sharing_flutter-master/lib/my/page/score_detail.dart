@@ -5,6 +5,7 @@ import 'package:knowledge_sharing/common/constant.dart';
 import 'package:knowledge_sharing/http/api.dart';
 import 'package:knowledge_sharing/http/http_util.dart';
 import 'package:knowledge_sharing/my/model/bonus_log.dart';
+
 /// 积分明细
 class ScoreDetail extends StatefulWidget {
   @override
@@ -38,21 +39,24 @@ class _ScoreDetailState extends State<ScoreDetail> {
               title: Row(
                 children: <Widget>[
                   Icon(Icons.access_time),
-                  Text("${bonusList[index].createTime}" + " ${bonusList[index].description}")
+                  Text("${bonusList[index].createTime.substring(0,19).replaceAll("T", " ")}" +
+                      " ${bonusList[index].description}")
                 ],
               ),
-              trailing: Text("20"),
+              // trailing: Text("20"),
             ),
           );
-        },
+        }
       ),
     );
   }
 
   void getBonusByUserId() {
-    HttpUtil.getRequest(Api.bonusDetail + "/" + Constant.user.id.toString(), null, (code, msg, data) {
-      for (int i = 0; i < data.length; i++) {
-        BonusLog bonusLog = BonusLog.fromJson(data[i]);
+    HttpUtil.getRequest(Api.bonusLog, {"userId": Constant.user.id},
+        (code, msg, data) {
+      
+      for(int i=0;i<data.length;i++){
+        BonusLog bonusLog=BonusLog.fromJson(data[i]);
         bonusList.add(bonusLog);
       }
       setState(() {});

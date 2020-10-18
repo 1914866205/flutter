@@ -23,6 +23,7 @@ class _MyExchangeStaet extends State<MyExchange> {
   void initState() {
     getSharesByUserId();
     super.initState();
+
   }
 
   @override
@@ -51,22 +52,16 @@ class _MyExchangeStaet extends State<MyExchange> {
             E/flutter (21152): #0      Object.noSuchMethod (dart:core-patch/object_patch.dart:53:5)
 
          */
-        // for (int i = 0; i < data.length-1; i++) {
-        //   print("******************************************************************************");
-        //   print(data[i].toString());
-        //
-        //   Share share = Share.fromJson(data[i]);
-        //   exchangeList.add(share);
-        //   print("******************************************************************************");
-        // }
-        int i=0;
-        while(data[i]!=null){
+        for (int i = 0; i < data.length; i++) {
           Share share = Share.fromJson(data[i]);
           exchangeList.add(share);
-          i++;
         }
-
-
+        // int i=0;
+        // while(data[i]!=null){
+        //   Share share = Share.fromJson(data[i]);
+        //   exchangeList.add(share);
+        //   i++;
+        // }
         setState(() {});
       } else {
         print("请求异常>>>>>" + msg);

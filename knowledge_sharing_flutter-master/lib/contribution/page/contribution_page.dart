@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:knowledge_sharing/common/common_style.dart';
 import 'package:knowledge_sharing/common/constant.dart';
+import 'package:knowledge_sharing/http/api.dart';
+import 'package:knowledge_sharing/http/http_util.dart';
+import 'package:knowledge_sharing/login/model/toast.dart';
+
 /// 投稿页
 class ContributionPage extends StatefulWidget {
   @override
@@ -17,9 +22,21 @@ class _ContributionPageState extends State<ContributionPage>
   FocusNode priceNode = FocusNode();
   FocusNode introductionNode = FocusNode();
   FocusNode addressNode = FocusNode();
+  FocusNode coverNode = FocusNode();
+
+  TextEditingController titleTextEditingController = TextEditingController();
+  TextEditingController authorTextEditingController = TextEditingController();
+  TextEditingController priceTextEditingController = TextEditingController();
+  TextEditingController introductionTextEditingController =
+      TextEditingController();
+  TextEditingController addressTextEditingController = TextEditingController();
+  TextEditingController coverTextEditingController = TextEditingController();
 
   @override
   void initState() {
+    titleTextEditingController.addListener(() {
+      debugPrint('input:${titleTextEditingController.text}');
+    });
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
@@ -114,15 +131,19 @@ class _ContributionPageState extends State<ContributionPage>
     return Expanded(
         child: Column(
       children: <Widget>[
-        _buildFormItem("标题", "请输入标题", titleNode),
+        _buildFormItem("标题", "请输入标题", titleNode, titleTextEditingController),
         CommonStyle.divider,
-        _buildFormItem("作者", "请输入作者", authorNode),
+        _buildFormItem("作者", "请输入作者", authorNode, authorTextEditingController),
         CommonStyle.divider,
-        _buildFormItem("价格", "请输入价格", priceNode),
+        _buildFormItem("价格", "请输入 价格", priceNode, priceTextEditingController),
         CommonStyle.divider,
-        _buildFormItem("简介", "介绍一下技术干货吧", introductionNode),
+        _buildFormItem("图片", "请输入图片地址", coverNode, coverTextEditingController),
         CommonStyle.divider,
-        _buildFormItem("下载地址", "请输入下载地址", addressNode),
+        _buildFormItem("简介", "介绍一下技术干货吧", introductionNode,
+            introductionTextEditingController),
+        CommonStyle.divider,
+        _buildFormItem(
+            "下载地址", "请输入下载地址", addressNode, addressTextEditingController),
         Container(
           width: MediaQuery.of(context).size.width,
           height: 100.w,
@@ -141,7 +162,8 @@ class _ContributionPageState extends State<ContributionPage>
     ));
   }
 
-  Widget _buildFormItem(String name, String hitText, FocusNode currentNode) {
+  Widget _buildFormItem(String name, String hitText, FocusNode currentNode,
+      TextEditingController textEditingController) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,6 +180,7 @@ class _ContributionPageState extends State<ContributionPage>
             height: 100.w,
             child: TextField(
               focusNode: currentNode,
+              controller: textEditingController,
               decoration: InputDecoration(
                   hintText: hitText,
                   hintStyle: CommonStyle.font32Grey(),
@@ -178,6 +201,31 @@ class _ContributionPageState extends State<ContributionPage>
       priceNode.unfocus();
       introductionNode.unfocus();
       addressNode.unfocus();
+      coverNode.unfocus();
     });
+    HttpUtil.request(Api.contribute, {
+      "userId": Constant.user.id,
+      "title": titleTextEditingController.text,
+      "isOriginal": _switchSelected ? 1 : 0,
+      "author": authorTextEditingController.text,
+      "cover": addressTextEditingController.text,
+      "summary": introductionTextEditingController.text,
+      "price": priceTextEditingController.text,
+      "downloadUrl": addressTextEditingController.text
+    }, (code, msg, data) {
+      if (code == 200) {
+        Constant.user.bonus = Constant.user.bonus + 5;
+        Toast.toast(context, msg: "投稿成功，积分 +5 ！");
+        titleTextEditingController.text = "";
+        addressTextEditingController.text = "";
+        introductionTextEditingController.text = "";
+        priceTextEditingController.text = "";
+        authorTextEditingController.text = "";
+        coverTextEditingController.text = "";
+        print(Constant.user.bonus.toString());
+      } else {
+        Toast.toast(context, msg: "投稿失败，请重试！");
+      }
+    }, (error) => null);
   }
 }
