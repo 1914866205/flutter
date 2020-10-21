@@ -22,7 +22,7 @@ class _Day03State extends State<Day03> {
             children: <Widget>[
               ///加载图片常用的一种方式  asset 工程目录下的图片，File 本地图片 , netWork 网络图片
               Image.asset(
-                "images/practices.jpg",
+                "assets.images/practices.jpg",
                 width: 200,
               ),
 

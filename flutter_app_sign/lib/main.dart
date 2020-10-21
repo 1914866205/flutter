@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'firstweek/Day01.dart';
 import 'firstweek/Day02.dart';
+import 'firstweek/Day03.dart';
+import 'firstweek/Day05.dart';
+import 'firstweek/day04.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +22,10 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity
       ),
       // home:Day01(),
-      home:Day02(),
+      // home:Day02(),
+      // home:Day03(),
+      // home:Day04(),
+      home:Day05(),
     );
   }
 
