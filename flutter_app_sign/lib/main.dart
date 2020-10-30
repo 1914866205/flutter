@@ -9,6 +9,7 @@ import 'firstweek/Day06.dart';
 import 'firstweek/Day07.dart';
 import 'firstweek/Day10.dart';
 import 'firstweek/Day11.dart';
+import 'firstweek/Day13.dart';
 import 'firstweek/day04.dart';
 import 'firstweek/day08.dart';
 import 'firstweek/day09.dart';
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
       // home:FirstPratise(),
       // home:Day10(),
       // home:Day11(),
-      home:Day12(),
+      // home:Day12(),
+      home:Day13(),
     );
   }
 
